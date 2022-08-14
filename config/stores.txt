@@ -1,0 +1,25 @@
+{'mysql':
+ {'user': 'root',
+  'password': 'secret',
+  'host': 'mysql',
+  'db': 'db0'},
+ 'redis':
+ {'host': 'redis',
+  'port': 6379,
+  'redisDb': 0,
+  'db': 'db0'},
+ 'postgres':
+ {'host': 'postgres',
+  'db': 'db0',
+  'user': 'postgres',
+  'password': 'postgres'},
+ 'mongodb' :
+ {'host': 'mongodb',
+  'port': 27111,
+  'db': 'db0',
+  'user': 'root',
+  'password': 'secret'},
+ 'sqlite3':
+ {'db': 'db0',
+  'sqlite3_file_prefix': 'data/'}
+}

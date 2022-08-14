@@ -1,0 +1,247 @@
+python-user@d372377bebdf:~$ python
+Python 3.10.6 (main, Aug  3 2022, 10:13:24) [GCC 10.2.1 20210110] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import cindi, cindi_tests
+>>> cindi.quick_cindi(cindi_tests.EXAMPLE0, exit_on_fail=False)
++ Deleting cached ALL RECORDS statement, for CREATE IN nonsense FIELDS (nonsense_a, nonsense_b, nonsense_c) VALUES ("hekkin big", "skare", "today and now")
+postgres> INSERT INTO nonsense (nonsense_a, nonsense_b, nonsense_c) VALUES ('hekkin big', 'skare', 'today and now');
+postgres> result row count 1
+MySQL> INSERT INTO nonsense (nonsense_a, nonsense_b, nonsense_c) VALUES ('hekkin big', 'skare', 'today and now');
+MySQL> result row count 1
+sqlite3> INSERT INTO nonsense (nonsense_a, nonsense_b, nonsense_c) VALUES ('hekkin big', 'skare', 'today and now');
+sqlite3> result row count 1
+mongodb> mongo queuing for insertion ('nonsense_a', 'hekkin big')
+mongodb> mongo queuing for insertion ('nonsense_b', 'skare')
+mongodb> mongo queuing for insertion ('nonsense_c', 'today and now')
+mongodb> mongo collection insertion ('id', '1')
+mongodb> mongo collection insertion ('nonsense_a', 'hekkin big')
+mongodb> mongo collection insertion ('nonsense_b', 'skare')
+mongodb> mongo collection insertion ('nonsense_c', 'today and now')
+REDIS> GET db0-nonsense-NEXTPK
+REDIS> SET db0-nonsense-NEXTPK 2
+REDIS> db0-nonsense-NEXTPK 2
+REDIS> redis this built set length: 1
+REDIS> redis set element: None
+REDIS> SET db0-nonsense_1_nonsense_a 'hekkin big'
+REDIS> db0-nonsense_1_nonsense_a hekkin big
+REDIS> redis this built set length: 2
+REDIS> redis set element: None
+REDIS> redis set element: None
+REDIS> SET db0-nonsense_1_nonsense_b 'skare'
+REDIS> db0-nonsense_1_nonsense_b skare
+REDIS> redis this built set length: 3
+REDIS> redis set element: None
+REDIS> redis set element: None
+REDIS> redis set element: None
+REDIS> SET db0-nonsense_1_nonsense_c 'today and now'
+REDIS> db0-nonsense_1_nonsense_c today and now
+REDIS> redis this built set length: 4
+REDIS> redis set element: None
+REDIS> redis set element: None
+REDIS> redis set element: None
+REDIS> redis set element: None
+REDIS> SET db0-nonsense_1_id 1
+REDIS> db0-nonsense_1_id 1
+REDIS> redis this built set length: 1
+REDIS> redis set element: None
+[[]]
+>>> cindi.quick_cindi(cindi_tests.EXAMPLE6, exit_on_fail=False)
++ Cache miss. Query is READ IN nonsense id 1 FIELDS nonsense_a
+postgres> SELECT nonsense_a FROM nonsense WHERE id = 1 ORDER BY id ASC;
+postgres> result row count 1
+postgres> hekkin big
+MySQL> SELECT nonsense_a FROM nonsense WHERE id = 1 ORDER BY id ASC;
+MySQL> result row count 0
+MySQL> hekkin big
+sqlite3> SELECT nonsense_a FROM nonsense WHERE id = 1 ORDER BY id ASC;
+sqlite3> result row count -1
+sqlite3> hekkin big
+REDIS> GET db0-nonsense_1_nonsense_a
+REDIS> redis this built set length: 1
+REDIS> redis set element: hekkin big
+[[['hekkin big']]]
+>>> cindi.quick_cindi(cindi_tests.EXAMPLE5, exit_on_fail=False)
++ Cache miss. Query is READ IN nonsense ALL RECORDS FIELDS (id, nonsense_a, nonsense_b, nonsense_c)
+postgres> SELECT id, nonsense_a, nonsense_b, nonsense_c FROM nonsense ORDER BY id ASC;
+postgres> result row count 1
+postgres> 1
+postgres> hekkin big
+postgres> skare
+postgres> today and now
+MySQL> SELECT id, nonsense_a, nonsense_b, nonsense_c FROM nonsense ORDER BY id ASC;
+MySQL> result row count 0
+MySQL> 1
+MySQL> hekkin big
+MySQL> skare
+MySQL> today and now
+sqlite3> SELECT id, nonsense_a, nonsense_b, nonsense_c FROM nonsense ORDER BY id ASC;
+sqlite3> result row count -1
+sqlite3> 1
+sqlite3> hekkin big
+sqlite3> skare
+sqlite3> today and now
+REDIS> GET db0-nonsense-NEXTPK
+REDIS> max_pk is: 2
+REDIS> GET db0-nonsense_1_id
+REDIS> redis this built set length: 1
+REDIS> redis set element: 1
+REDIS> GET db0-nonsense_1_nonsense_a
+REDIS> redis this built set length: 2
+REDIS> redis set element: 1
+REDIS> redis set element: hekkin big
+REDIS> GET db0-nonsense_1_nonsense_b
+REDIS> redis this built set length: 3
+REDIS> redis set element: 1
+REDIS> redis set element: hekkin big
+REDIS> redis set element: skare
+REDIS> GET db0-nonsense_1_nonsense_c
+REDIS> redis this built set length: 4
+REDIS> redis set element: 1
+REDIS> redis set element: hekkin big
+REDIS> redis set element: skare
+REDIS> redis set element: today and now
+[[[1, 'hekkin big', 'skare', 'today and now']]]
+>>> cindi.quick_cindi(cindi_tests.EXAMPLE10, exit_on_fail=False)
++ Deleting cached DQL result 
+	 READ IN nonsense id 1 FIELDS nonsense_a 
++ because it is affected by 
+	 UPDATE IN nonsense nonsense_b skare FIELDS (nonsense_b) VALUES (scare)
++ Deleting cached DQL result 
+	 READ IN nonsense ALL RECORDS FIELDS (id, nonsense_a, nonsense_b, nonsense_c) 
++ because it is affected by 
+	 UPDATE IN nonsense nonsense_b skare FIELDS (nonsense_b) VALUES (scare)
+postgres> UPDATE nonsense SET nonsense_b = 'scare' WHERE nonsense_b = 'skare';
+postgres> result row count 1
+MySQL> UPDATE nonsense SET nonsense_b = 'scare' WHERE nonsense_b = 'skare';
+MySQL> result row count 1
+sqlite3> UPDATE nonsense SET nonsense_b = 'scare' WHERE nonsense_b = 'skare';
+sqlite3> result row count 1
+mongodb>  UPDATE by skare
+mongodb> UPDATE pk 1
+mongodb>  pair ('nonsense_b', 'scare')
+REDIS> matching key length: 1
+REDIS> GET db0-nonsense_1_nonsense_b
+REDIS> skare compared to skare
+REDIS> SET db0-nonsense_1_nonsense_b 'scare'
+REDIS> db0-nonsense_1_nonsense_b scare
+REDIS> redis this built set length: 1
+REDIS> redis set element: None
+[[]]
+>>> cindi.quick_cindi(cindi_tests.EXAMPLE5, exit_on_fail=False)
++ Cache miss. Query is READ IN nonsense ALL RECORDS FIELDS (id, nonsense_a, nonsense_b, nonsense_c)
+postgres> SELECT id, nonsense_a, nonsense_b, nonsense_c FROM nonsense ORDER BY id ASC;
+postgres> result row count 1
+postgres> 1
+postgres> hekkin big
+postgres> scare
+postgres> today and now
+MySQL> SELECT id, nonsense_a, nonsense_b, nonsense_c FROM nonsense ORDER BY id ASC;
+MySQL> result row count 0
+MySQL> 1
+MySQL> hekkin big
+MySQL> scare
+MySQL> today and now
+sqlite3> SELECT id, nonsense_a, nonsense_b, nonsense_c FROM nonsense ORDER BY id ASC;
+sqlite3> result row count -1
+sqlite3> 1
+sqlite3> hekkin big
+sqlite3> scare
+sqlite3> today and now
+REDIS> GET db0-nonsense-NEXTPK
+REDIS> max_pk is: 2
+REDIS> GET db0-nonsense_1_id
+REDIS> redis this built set length: 1
+REDIS> redis set element: 1
+REDIS> GET db0-nonsense_1_nonsense_a
+REDIS> redis this built set length: 2
+REDIS> redis set element: 1
+REDIS> redis set element: hekkin big
+REDIS> GET db0-nonsense_1_nonsense_b
+REDIS> redis this built set length: 3
+REDIS> redis set element: 1
+REDIS> redis set element: hekkin big
+REDIS> redis set element: scare
+REDIS> GET db0-nonsense_1_nonsense_c
+REDIS> redis this built set length: 4
+REDIS> redis set element: 1
+REDIS> redis set element: hekkin big
+REDIS> redis set element: scare
+REDIS> redis set element: today and now
+[[[1, 'hekkin big', 'scare', 'today and now']]]
+>>> cindi.quick_cindi('READ IN nonsense id 1 FIELDS nonsense_b', exit_on_fail=False)
++ Cache miss. Query is READ IN nonsense id 1 FIELDS nonsense_b
+postgres> SELECT nonsense_b FROM nonsense WHERE id = 1 ORDER BY id ASC;
+postgres> result row count 1
+postgres> scare
+MySQL> SELECT nonsense_b FROM nonsense WHERE id = 1 ORDER BY id ASC;
+MySQL> result row count 0
+MySQL> scare
+sqlite3> SELECT nonsense_b FROM nonsense WHERE id = 1 ORDER BY id ASC;
+sqlite3> result row count -1
+sqlite3> scare
+REDIS> GET db0-nonsense_1_nonsense_b
+REDIS> redis this built set length: 1
+REDIS> redis set element: scare
+[[['scare']]]
+>>> cindi.quick_cindi(cindi_tests.EXAMPLE13, exit_on_fail=False)
++ Deleting cached DQL result 
+	 READ IN nonsense ALL RECORDS FIELDS (id, nonsense_a, nonsense_b, nonsense_c) 
++ because it is affected by 
+	 DELETE IN nonsense id 1
++ Deleting cached DQL result 
+	 READ IN nonsense id 1 FIELDS nonsense_b 
++ because it is affected by 
+	 DELETE IN nonsense id 1
+postgres> DELETE FROM nonsense WHERE id = 1
+postgres> result row count 1
+MySQL> DELETE FROM nonsense WHERE id = 1
+MySQL> result row count 1
+sqlite3> DELETE FROM nonsense WHERE id = 1
+sqlite3> result row count 1
+REDIS> DEL db0-nonsense_1_nonsense_c
+REDIS> DEL db0-nonsense_1_nonsense_b
+REDIS> DEL db0-nonsense_1_id
+REDIS> DEL db0-nonsense_1_nonsense_a
+REDIS> DEL db0-nonsense_1_nonsense_c
+REDIS> redis this built set length: 1
+REDIS> redis set element: None
+REDIS> DEL db0-nonsense_1_nonsense_b
+REDIS> redis this built set length: 1
+REDIS> redis set element: None
+REDIS> DEL db0-nonsense_1_id
+REDIS> redis this built set length: 1
+REDIS> redis set element: None
+REDIS> DEL db0-nonsense_1_nonsense_a
+REDIS> redis this built set length: 1
+REDIS> redis set element: None
+[[]]
+>>> cindi.quick_cindi(cindi_tests.EXAMPLE5, exit_on_fail=False)
++ Cache miss. Query is READ IN nonsense ALL RECORDS FIELDS (id, nonsense_a, nonsense_b, nonsense_c)
+postgres> SELECT id, nonsense_a, nonsense_b, nonsense_c FROM nonsense ORDER BY id ASC;
+postgres> result row count 0
+MySQL> SELECT id, nonsense_a, nonsense_b, nonsense_c FROM nonsense ORDER BY id ASC;
+MySQL> result row count 0
+sqlite3> SELECT id, nonsense_a, nonsense_b, nonsense_c FROM nonsense ORDER BY id ASC;
+sqlite3> result row count -1
+REDIS> GET db0-nonsense-NEXTPK
+REDIS> max_pk is: 2
+REDIS> GET db0-nonsense_1_id
+REDIS> redis this built set length: 1
+REDIS> redis set element: None
+REDIS> GET db0-nonsense_1_nonsense_a
+REDIS> redis this built set length: 2
+REDIS> redis set element: None
+REDIS> redis set element: None
+REDIS> GET db0-nonsense_1_nonsense_b
+REDIS> redis this built set length: 3
+REDIS> redis set element: None
+REDIS> redis set element: None
+REDIS> redis set element: None
+REDIS> GET db0-nonsense_1_nonsense_c
+REDIS> redis this built set length: 4
+REDIS> redis set element: None
+REDIS> redis set element: None
+REDIS> redis set element: None
+REDIS> redis set element: None
+[[]]
+>>> 

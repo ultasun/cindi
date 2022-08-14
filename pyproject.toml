@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cindi"
+version = "0.9.1.0.1"
+authors = [{name="ultasun", email="ultasun@icloud.com"}]
+description = "CINDI is a Meta-DBMS to support rapid application prototyping."
+readme = "README.md"
+license = { file="LICENSE" }
+# CINDI was developed on Python 3.10
+requires-python = ">=3.0"
+classifiers = [	"Programming Language :: Python :: 3",
+	      	"Environment :: Console",
+		"Framework :: Flask",
+		"Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+		"Development Status :: 3 - Alpha",
+		"License :: OSI Approved :: BSD License",
+		"Programming Language :: SQL",
+		"Topic :: Database :: Database Engines/Servers",
+		"Topic :: Database :: Front-Ends",
+		"Topic :: Software Development :: Code Generators",
+		"Topic :: Software Development :: Interpreters",
+	      	"Operating System :: OS Independent" ]
+dependencies = [ "flask",
+	       	 "flask_cors",
+	     	 "pyOpenSSL" ]
+
+[project.optional-dependencies]
+postgres = [ "psycopg" ]
+redis = [ "redis" ]
+mysql = [ "mysql-connector-python" ]
+mongodb = [ "pymongo" ]
+
+[project.urls]
+"Homepage" = "https://github.com/ultasun/cindi"
+"Bug Tracker" = "https://github.com/ultasun/cindi/issues"
