@@ -158,6 +158,9 @@ After start-up, development *Flask* server will **not** have *SSL* enabled.
    - `>>> cindi.quick_cindi(cindi.EXAMPLE5)`
         - The above function returns a multi-dimensional list of values.
 
+## Support
+The author is available for questions, comments and criticism in #cindi on [Libera.Chat](https://libera.chat).
+
 ## Credits
 Please read the [LICENSE](https://github.com/ultasun/cindi/blob/master/LICENSE).  This is alpha-quality software, you are likely to find bugs!  Please submit feedback!
 **Thank you for evaluating *CINDI*!**
