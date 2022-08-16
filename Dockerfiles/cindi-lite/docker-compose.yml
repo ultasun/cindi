@@ -1,0 +1,24 @@
+# --- HOW TO docker compose ------
+# 1) $ docker compose up
+# 2) Ctrl+c when ready to quit, shutdown can take about 15 seconds.
+# 3) $ docker compose down 
+
+version: "3.8"
+
+services:
+  cindi:
+    image: ultasun/cindi-lite
+    ports:
+      - 36963:36963
+    working_dir: /app
+    volumes:
+      - cindi-sqlite3-data:/app/data
+      - cindi-logs:/app/logs
+      - ./config:/app/config
+      - ./init-nonsense-sqlite3.sql:/app/init-nonsense-sqlite3.sql
+
+volumes:
+  cindi-sqlite3-data:
+  cindi-logs:
+  
+  

@@ -1,0 +1,78 @@
+# --- HOW TO docker compose ------
+# 1) $ docker compose up
+# 2) Ctrl+c when ready to quit, shutdown can take about 15 seconds.
+# 3) $ docker compose down
+
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:latest
+    volumes:
+      - cindi-mysql-data:/var/lib/mysql
+      - "./init-nonsense-mysql.sql:/docker-entrypoint-initdb.d/1.sql"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+
+  redis:
+    image: redis:latest
+    volumes:
+      - cindi-redis-data:/data
+
+  postgres:
+    image: postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+#    logging:
+#      options:
+#        max-size: 10m
+#	max-file: "3"
+    ports:
+      - '5432:5432'
+    volumes:
+      - cindi-postgresql-data:/var/lib/postgresql/data
+      - "./init-nonsense-postgresql.sql:/docker-entrypoint-initdb.d/1.sql"
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    command: mongod --auth --port 27111
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    ports:
+      - 27111:27111
+    volumes:
+      - cindi-mongodb-data:/data/db
+      - "./init-nonsense-mongodb.js:/docker-entrypoint-initdb.d/1.js"
+
+# when cindi.py starts, it doesn't open DBMS connections until it receives
+# HTTP client requests, so there is no need to "sleep for 11 seconds" while
+# the back-end services initialize.  
+  cindi:
+    image: ultasun/cindi
+    depends_on:
+      - "mysql"
+      - "redis"
+      - "postgres"
+      - "mongodb"
+    ports:
+      - 36963:36963
+    working_dir: /app
+    volumes:
+      - cindi-sqlite3-data:/app/data
+      - cindi-logs:/app/logs
+      - ./config:/app/config
+      - ./init-nonsense-sqlite3.sql:/app/init-nonsense-sqlite3.sql
+
+volumes:
+  cindi-sqlite3-data:
+  cindi-mysql-data:
+  cindi-redis-data:
+  cindi-postgresql-data:
+  cindi-mongodb-data:
+  cindi-logs:
+  
+  
