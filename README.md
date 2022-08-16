@@ -3,6 +3,8 @@
 front-end applications to perform [*CRUD*](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations  with various back-end
 stores.  *CINDI* is written in *Python 3*, and is available in the [*PyPI Index* as a *PIP* package](https://pypi.org/project/cindi/).  
 
+*CINDI* is, basically, a translator, to translate *INDI* language statements to either *SQL*, *MongoDB*, or *Redis*. More backing-store systems could be supported in the future.
+
 *CINDI* is intended to be used during the early rapid-prototyping / idea phase, so that developers may focus on the layout, functionality, and usability of a front-end application.  **Think of *CINDI* as a temporary substitute**, until a proper back-end infrastructure is built.  This way, the initial pioneers of a project need only to focus their energy on the front-end(s).
 
 The idea is to forgo the traditional map of API endpoints usually provided by a back-end.  Instead, front-end code will submit *INDI* statements directly to a single endpoint, and receive *JSON* responses accordingly. The result is, most application logic is shifted into the front-end code, which simplifies the rapid prototyping of applications.
@@ -87,8 +89,6 @@ A subsequent `READ` would return an empty set.  Note the `DELETE` may have queri
 
 The `doc` folder also contains schema examples for the other supported systems.
 
----
-
 ### Why ?
 
 The above demonstration may seem trivial, however, consider that *CINDI* will support managing these *INDI* statements even if the backing-store is a *NoSQL* solution, such as *MongoDB* or *Redis*.  The results are consistent, and if multiple stores are enabled, then any cache-missed `READ` will query all the stores, and compare the results to ensure consistency across the storage mechanisms.
@@ -157,7 +157,7 @@ After start-up, development *Flask* server will **not** have *SSL* enabled.
         - The above function returns `True` if all tests succeed.
    - `>>> cindi.quick_cindi(cindi.EXAMPLE5)`
         - The above function returns a multi-dimensional list of values.
-
+---
 ## Logging
 Since *CINDI* is in the alpha development stage, every *DML* statement is logged in the `logs/` directory. Whatever data you're submitting, a copy will be saved in that directory.
 - This will consume disk space.
@@ -253,6 +253,6 @@ See the next section regarding **Support**!
 The author is available for questions, comments and criticism in #cindi on [Libera.Chat](https://libera.chat).
 
 ## Credits
-Please read the [LICENSE](https://github.com/ultasun/cindi/blob/master/LICENSE).  This is alpha-quality software, you are likely to find bugs!  Please submit feedback!
+Please read the [LICENSE](https://github.com/ultasun/cindi/blob/master/LICENSE).  This software was written by a single individual.  This is alpha-quality software, you are likely to find bugs!  Please submit feedback!
 **Thank you for evaluating *CINDI*!**
 
