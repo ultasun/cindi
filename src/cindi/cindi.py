@@ -73,10 +73,7 @@ DEBUG_PRINT_PREFIX__SQLITE3 = "sqlite3> "
 
 ERROR__FIELDS_AND_VALUES_BAD_QUANTITY = """!! ERROR: 
 The quantity of fields detected is not equal to the number of values detected.  
-** IF THE INPUT IS SANE **, then this is a bug in get_indi_values(), 
-because the string tokenization of the VALUES clause is not the perfect.  
-Please share with the author the particular INDI statement that crashed the
-program. Submit a bug. Thank you."""
+Check the CINDI README."""
 
 # end constants declarations section
 # ------------------------------------------------------------------------------
@@ -539,12 +536,12 @@ def execute_redis(indi_statement, stores):
             if redis_connection.set(redis_key, redis_value):
                 this_result = None
             else:
-                this_result = "Redis SET failed."
+                this_result = "Redis SET failed. Check the CINDI README."
                 print(DEBUG_PRINT_PREFIX__REDIS + this_result)
                 print(DEBUG_PRINT_PREFIX__REDIS + \
                       'This was the statement to evaluate: ')
                 print(DEBUG_PRINT_PREFIX__REDIS + statement)
-                exit(131) # 'state not recoverable' 
+                exit(29) # 'cannot write to specified device' 
         else:
             this_result = redis_connection.execute_command(statement)
             # a 'DEL' will return a 1 into this_result, desire 'None'
@@ -1242,10 +1239,10 @@ def execute_then_cache_indi(statement, caches, stores, which_store='all'):
     
     if command == 'READ':
         if statement in cache:
-            print('+ Cache hit! Query is ' + statement)
+            print('+ Cache hit! Query is \n\t' + statement)
             result = cache[statement][1] # "that was easy"
         else:
-            print('+ Cache miss. Query is ' + statement)
+            print('+ Cache miss. Query is \n\t' + statement)
             if stores == None:
                 stores = initialize_stores()
                 stores_was_none = True
@@ -1260,16 +1257,19 @@ def execute_then_cache_indi(statement, caches, stores, which_store='all'):
             cache[statement] = (affected_pk_tuple, read_result)
             result = read_result
     else:
+        del_list = []
         if stores == None:
             stores = initialize_stores()
             stores_was_none = True
-        
         if command == 'CREATE':
             print('+ Deleting cached ALL RECORDS statement, for ' + statement)
+            del_list = []
+            # search for DQL's with tables to be affected by this 'CREATE'
             for dql in cache.keys():
-                if cache[dql][0] == (0,): # is an 'ALL RECORDS' statement?
-                    del cache[dql]
-                    break 
+                if cache[dql][0] == (0,) and \
+                   table_name == dql.split()[2] : # an 'ALL RECORDS' statement?
+                    del_list.append(dql)
+            # run the CREATE
             result = execute_indi(statement, stores, which_store)
         elif command == 'UPDATE' or command == 'DELETE':
             affected_pk_tuple = \
@@ -1278,20 +1278,25 @@ def execute_then_cache_indi(statement, caches, stores, which_store='all'):
             # expensive O(n^2), but there could be many cached READ's affected!
             for affected_pk in affected_pk_tuple:
                 for dql in cache.keys():
-                    if affected_pk in cache[dql][0] or cache[dql][0] == (0,):
+                    if (affected_pk in cache[dql][0] or cache[dql][0] == (0,)) \
+                       and dql.split()[2] == table_name:
                         del_list.append(dql)     
-            # delete the found cached DQL's
-            for dql in del_list:
-                if dql in cache: # it may have been deleted already
-                    print('+ Deleting cached DQL result \n\t ' \
-                      + dql + ' \n+ because it is affected by \n\t ' \
-                          + statement)
-                    del cache[dql]
             # run the UPDATE
             result = execute_indi(statement, stores, which_store)
         else:
             print('+ Invalid INDI command: ' + statement)
             result = [ 'Invalid INDI command.', statement ]
+            
+        # ? if the execute_indi fails, the cache might not be deleted, keep
+        # this in mind when making CINDI fault-tolerant later!
+        if len(del_list) > 0:
+            # delete the found cached DQL's
+            for dql in del_list:
+                if dql in cache: # it may have been deleted already
+                    print('+ Deleting cached DQL result \n\t ' \
+                      + dql + ' \n\tBecause it is affected by \n\t ' \
+                           + statement)
+                    del cache[dql]
 
     # close the stores if necessary
     if stores_was_none:
@@ -1548,30 +1553,41 @@ def quick_cindi(statement, \
         print('Corrupted store, please file a bug. Check the CINDI README.')
         if exit_on_fail:
             exit(117) # 'common linux error 117: structure needs cleaning'
-    except mysql.connector.Error as err:
-        print('MySQL error: {}'.format(err))
+    except Exception as err:
+        print('High level error: {}'.format(err))
         if exit_on_fail:
-            exit(131) # 'common linux error 131: state not recoverable'
-    except psycopg.OperationalError as err:
-        print('Postgres error: {}'.format(err))
-        if exit_on_fail:
-            exit(131) # 'common linux error 131: state not recoverable'
-    except sqlite3.Error as err:
-        print('sqlite3 error: {}'.format(err))
-        if exit_on_fail:
-            exit(131) # 'common linux error 131: state not recoverable'
-    except redis.exceptions.RedisError as err:
-        print('redis error: {}'.format(err))
-        if exit_on_fail:
-            exit(131) # 'common linux error 131: state not recoverable'
-    except pymongo.errors.PyMongoError as err:
-        print('mongodb error: {}'.format(err))
-        if exit_on_fail:
-            exit(131) # 'common linux error 131: state not recoverable'
+            exit(131) #' common linux error 131: state not recoverable'
     except BaseException as err:
-        result = [ 'Unknown error while parsing INDI statement.', \
-                   statement, str(err) ]
+        print('Low level error: {}'.format(err))
+        if exit_on_fail:
+            exit(22) # 'common linxu error 22: invalid argument'
+#    except mysql.connector.Error as err:
+#        print('MySQL error: {}'.format(err))
+#        if exit_on_fail:
+#            exit(131) # 'common linux error 131: state not recoverable'
+#    except psycopg.OperationalError as err:
+#        print('Postgres error: {}'.format(err))
+#        if exit_on_fail:
+#            exit(131) # 'common linux error 131: state not recoverable'
+#    except sqlite3.Error as err:
+#        print('sqlite3 error: {}'.format(err))
+#        if exit_on_fail:
+#            exit(131) # 'common linux error 131: state not recoverable'
+#    except redis.exceptions.RedisError as err:
+#        print('redis error: {}'.format(err))
+#        if exit_on_fail:
+#            exit(131) # 'common linux error 131: state not recoverable'
+#    except pymongo.errors.PyMongoError as err:
+#        print('mongodb error: {}'.format(err))
+#        if exit_on_fail:
+#            exit(131) # 'common linux error 131: state not recoverable'
+#    except BaseException as err:
+#        result = [ 'Unknown error while parsing INDI statement.', \
+#                   statement, str(err) ]
 
+    # docker compose needs some help nudging out the stdout buffer...
+    sys.stdout.flush()
+    
     return result
 
 # end highest-level-execution section

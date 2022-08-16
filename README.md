@@ -158,6 +158,97 @@ After start-up, development *Flask* server will **not** have *SSL* enabled.
    - `>>> cindi.quick_cindi(cindi.EXAMPLE5)`
         - The above function returns a multi-dimensional list of values.
 
+## Logging
+Since *CINDI* is in the alpha development stage, every *DML* statement is logged in the `logs/` directory. Whatever data you're submitting, a copy will be saved in that directory.
+- This will consume disk space.
+- This will expose sensitive data.
+
+There is one *INDI* *DML* statement per file. Each filename ends with a nano-seconds-since-epoch timestamp. A filename prefixed with `indi` is a *DML* expression. At the time of this writing, there are no other files written to the `logs/` directory.
+
+There is no simple way to disable this disk logging without modifying the source code. Just re-define `def fprint(w, x='', y='', z=''):` to do nothing if you must. *CINDI* is in the alpha development stage, and it is designed to assist in developing apps which are also in the alpha development stage. *SSL* on the *Flask* development server is not even enabled, and the development server is 'not for production use' anyway.
+
+## Troubleshooting
+*CINDI* is in the alpha development stage. If you've encountered a problem, then you've probably found a bug in the translation routines, or your backing-stores are not configured correctly.
+
+*CINDI* will generally exit the *Python3* process on most errors ('fail fast'). The `logs/` directory is ordred by nanoseconds-since-epoch timestamps, so it should be easy to work-backwards to locate the *INDI* *DML* statement which was translated inconsistently across multiple backing-stores. The author can't forsee any other reason for *CINDI* to crash, besides a backing-store connectivity issue.
+
+When the *Python3* process exits, various [exit codes](https://mariadb.com/kb/en/operating-system-error-codes/) are used. This helps frequent users/developers of *CINDI* quickly identify from the *Docker* console (or elsewhere) why an `exit` had occurred.
+
+Here are the exit numbers and error messages which might be produced by *CINDI*:
+- **117**: `Corrupted store, please file a bug. Check the CINDI README.`
+  - The chain of *INDI* *DML* statements which were submitted to CINDI for execution over time, had managed to cause different **inconsistent** results to appear in the various backing stores.
+  - This will crash the system because, every *DQL* statement executed verifies consistency across all conneected backing stores ('fail fast'). So *CINDI* had a translation error during an earlier *DML* statement.
+  - **Remedy Options**:
+    - **First,** please submit a bug with the full contents of `logs/`, and santize your data first if possible. This error is really not the fault of the user (you). The `VALUES` may not be so important, so a simple script to truncate after the `VALUES` in each file within the `logs/` directory if you can't or won't share the `VALUES`.
+      - However, the `VALUES` would be appreciated, because **some parts of the translation code might do the wrong action if a value has too many single-or-double-quotes**, it's a your-milage-may-vary scenario (at this time).
+      	- Regular expressions might be used in the future to mitigate some of the forseen issues regarding single-and-double quotes
+	  - Because a proper recursive solution might be needed.
+    - **Second,** either:
+      - Manually adjust the backing-stores, using their native tools/clients, until the data is consistent.
+      	- Success will be obvious when *DQL* statements regarding the 'offending table' no longer cause *CINDI* to exit.
+      - Wipe all backing stores, and reload all the *INDI* statements from new.
+- **5**: `fprint failed to print to file: ...`
+  - The log-to-disk mechanism `fprint` failed to write a file.
+  - **Remedy Options**:
+    - Disk space full?
+    - Lost directory permissions during runtime?
+- **52**: `!! ERROR: The quantity of fields detected is not euqal to the number of values detected...`
+  - The submitted *INDI* *DML* statement does not have the same quantity of `FIELDS` and `VALUES`, **or**,
+  - The submitted *INDI* *DML* statement was unable to be parsed properly by the translation routine.
+    - Please submit a bug containing the *INDI* *DML* statement which caused this.
+      - Submitting the full `logs/` should not be necessary, because this error would be isolated to parsing a specific *INDI* *DML* statement before any writing to a backing-store occured.
+  - **Remedy Options**:
+    - Check the *INDI* syntax
+    - Manipulate the single-quotes or double-quotes in the `VALUES` of the offending statement
+      - Many nested single-quotes or double-quotes might confuse the translation routine.
+      	- Remove the quotes, and please submit a bug.
+	- Regular expressions will probably be used in the future to avoid problems like this.
+- **29**: `Redis SET failed.`
+  - While performing a *Redis* `SET`, it failed.
+  - **Remedy Options**:
+    - Was *CINDI* disconnected from *Redis* in the middle of the transaction?
+    - Did *CINDI* lose write access to the *Redis* database for some reason?
+  - Please submit a bug in any event! Thank you.
+- **2**: Relating to a configuration 'File Not Found':
+  - `config/stores.txt not found, please check the CINDI README.`
+  - `config/tables.txt not found, please check the CINDI README.`
+  - **Remedy Options**:
+    - The `config/` directory must be in the same directory `.` as where the *Python3* process was launched. This is an elementary user mistake. Please review this README file carefully, or check one of the published *Docker* images for a proper example of how the *Python3* process needs to be launched.
+    - The `config/stores.txt` or `config/tables.txt` files are missing or not named properly.
+- **61**: Relating to a configuration file 'Invalid Syntax':
+  - `config/stores.txt not a dictionary, check the CINDI README.`
+    - **Remedy Option**
+      - `config/stores.txt` must be a [*Python3* *dictionary*](https://docs.python.org/3/tutorial/datastructures.html#dictionaries). Check the syntax of what is in the file, and try again.
+  - `config/tables.txt must be a list or tuple, check CINDI README.`
+    - **Remedy Option**
+      - `config/tables.txt` must be a [*Python3* *list* or *tuple*](https://docs.python.org/3/tutorial/introduction.html#lists). Check the syntax of what is in the file, and try again.
+  - `No stores defined in config/stores.txt! Check CINDI README.`
+    - **Remedy Option**
+      - The `config/stores.txt` file has an empty dictionary in it.
+      	- Review this README file carefully, you must define at least one backing-store for *CINDI* to use!
+- **49**: `Failed to initialize XXXXX connection.`
+  - *Python3* support for your chosen backing-store mechanism is not installed, **or**,
+  - The connection/credential to the backing store is bad, **or**, the database you had specified to connect to in `config/stores.txt` is not available.
+  - **Remedy Option**
+    - Verify the *Python3* client library for the specified backing-store is installed.
+    - Verify the credentials to the backing-store are valid and specified correctly in `config/stores.txt`
+    - Verify the database configured in `config/stores.txt` exists, permissions are good, and so on.
+    - `...sqlite3 connection, file not found?`
+      - Perhaps the database file was deleted, or access was lost.
+      	- *CINDI* will not automatically re-create the *SQLite3* database in this event.
+	- Either reconstruct the *SQLite3* database manually, **or**,
+	- Wipe out all backing-stores, and start again from new.
+  - **Submit a bug if continuing to have difficulty connecting to a store, perhaps something changed in an underlying connectivity library!**
+- **131**: `High level error: ...`
+  - Some error, likely in a driver, occured.
+  - **Remedy Option: If the solution is not obvious, then you should submit a bug.**
+    - Especially if the problem is an *OperationalError*, complaining the *SQL* syntax is invalid.
+- **22**: `Low level error: ...`
+  - Some error, unforseen by the author, occured.
+  - **Remedy Option: If the solution is not obvious, then you should submit a bug.**
+
+See the next section regarding **Support**!
+
 ## Support
 The author is available for questions, comments and criticism in #cindi on [Libera.Chat](https://libera.chat).
 

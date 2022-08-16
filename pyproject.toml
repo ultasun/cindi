@@ -7,7 +7,7 @@ excluse = [ "/.git" ]
 
 [project]
 name = "cindi"
-version = "0.9.1.1"
+version = "0.9.1.3"
 authors = [{name="ultasun", email="ultasun@icloud.com"}]
 description = "CINDI is a Meta-DBMS to support rapid application prototyping."
 readme = "README.md"
