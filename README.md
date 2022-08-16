@@ -248,7 +248,9 @@ Here are the exit numbers and error messages which might be produced by *CINDI*:
   - **Remedy Option: If the solution is not obvious, then you should submit a bug.**
 
 ### Cache Duality Caveat
-**If you have multiple *CINDI* instances running against the same backing-stores, then a cache in one instance will not have a way to know if a *DML* `CREATE`/`UPDATE`/`DELETE` occured in another instance.** Please do not have multiple clones of *CINDI*.
+**If you have multiple *CINDI* instances running against the same backing-stores, then a cache in one instance will not have a way to know if a *DML* `CREATE`/`UPDATE`/`DELETE` occured in another instance.**  Please do not allow multiple clones of *CINDI* to interact with the same backing-stores concurrently.
+- A simple solution to this in a future release will be to have a `/cache-clear` endpoint in *Flask*, **or**
+- A file on the file system is monitored, if it is changed, then other instances know to clear the cache.
 
 See the next section regarding **Support**!
 
