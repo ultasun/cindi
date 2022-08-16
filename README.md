@@ -99,7 +99,7 @@ In the case of the *NoSQL* solutions, *CINDI* manages the concept of tables, col
 
 **CINDI will not automatically initialize SQL / Mongo schemas**, this must be done manually prior to runtime. That is why the author has provided a couple *Docker* demos, read on!
 
-**Check `cindi_tests.py` for more *INDI* language examples.**
+**Check [`cindi_tests.py`](https://github.com/ultasun/cindi/blob/master/src/cindi/cindi_tests.py) for more *INDI* language examples.**
 
 ## Installation, Easiest: *cindi-lite* Docker Compose Pack
 [Please go here](https://github.com/ultasun/cindi-lite) and follow the instructions in order to have *Docker Compose* orchestrate the setup of [`ultasun/cindi-lite`](https://hub.docker.com/r/ultasun/cindi-lite), which will consume the least resources. Along the way, you'll learn everything there is to know about configuring the *CINDI* runtime for a **minimalist *SQLite3*-only backing-store.**
