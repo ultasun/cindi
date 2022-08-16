@@ -3,7 +3,7 @@
 front-end applications to perform [*CRUD*](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations  with various back-end
 stores.  *CINDI* is written in *Python 3*, and is available in the [*PyPI Index* as a *PIP* package](https://pypi.org/project/cindi/).  
 
-*CINDI* is, basically, a translator, to translate *INDI* language statements to either *SQL*, *MongoDB*, or *Redis*. More backing-store systems could be supported in the future.
+*CINDI* is a service to translate *INDI* language statements to either *SQL*, *MongoDB*, or *Redis*.  *CINDI* also caches read queries in memory, so that clients asking for the same thing repetitively do not actually get to hit the backing-stores.
 
 *CINDI* is intended to be used during the early rapid-prototyping / idea phase, so that developers may focus on the layout, functionality, and usability of a front-end application.  **Think of *CINDI* as a temporary substitute**, until a proper back-end infrastructure is built.  This way, the initial pioneers of a project need only to focus their energy on the front-end(s).
 
@@ -246,6 +246,9 @@ Here are the exit numbers and error messages which might be produced by *CINDI*:
 - **22**: `Low level error: ...`
   - Some error, unforseen by the author, occured.
   - **Remedy Option: If the solution is not obvious, then you should submit a bug.**
+
+### Cache Duality Caveat
+**If you have multiple *CINDI* instances running against the same backing-stores, then a cache in one instance will not have a way to know if a *DML* `CREATE`/`UPDATE`/`DELETE` occured in another instance.** Please do not have multiple clones of *CINDI*.
 
 See the next section regarding **Support**!
 
