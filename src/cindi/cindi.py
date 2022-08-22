@@ -1560,30 +1560,7 @@ def quick_cindi(statement, \
     except BaseException as err:
         print('Low level error: {}'.format(err))
         if exit_on_fail:
-            exit(22) # 'common linxu error 22: invalid argument'
-#    except mysql.connector.Error as err:
-#        print('MySQL error: {}'.format(err))
-#        if exit_on_fail:
-#            exit(131) # 'common linux error 131: state not recoverable'
-#    except psycopg.OperationalError as err:
-#        print('Postgres error: {}'.format(err))
-#        if exit_on_fail:
-#            exit(131) # 'common linux error 131: state not recoverable'
-#    except sqlite3.Error as err:
-#        print('sqlite3 error: {}'.format(err))
-#        if exit_on_fail:
-#            exit(131) # 'common linux error 131: state not recoverable'
-#    except redis.exceptions.RedisError as err:
-#        print('redis error: {}'.format(err))
-#        if exit_on_fail:
-#            exit(131) # 'common linux error 131: state not recoverable'
-#    except pymongo.errors.PyMongoError as err:
-#        print('mongodb error: {}'.format(err))
-#        if exit_on_fail:
-#            exit(131) # 'common linux error 131: state not recoverable'
-#    except BaseException as err:
-#        result = [ 'Unknown error while parsing INDI statement.', \
-#                   statement, str(err) ]
+            exit(22) # 'common linux error 22: invalid argument'
 
     # docker compose needs some help nudging out the stdout buffer...
     sys.stdout.flush()
