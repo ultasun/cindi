@@ -406,12 +406,12 @@ def convert_to_redis(c, stores):
     if c_array[0].upper() == 'READ':
         # pulling all records
         if c_array[3] == 'ALL' and c_array[4] == 'RECORDS':
-            max_pk = convert_to_redis__get_next_pk(read_only_redis, \
+            max_pk = convert_to_redis__get_next_pk(read_only_redis,
                                              schema, c_array[2])
             print(DEBUG_PRINT_PREFIX__REDIS + "max_pk is: " + str(max_pk))
             for i in range(1, max_pk):
                 for field in fields:
-                    results.append('GET ' + (schema + '-' + c_array[2]) \
+                    results.append('GET ' + (schema + '-' + c_array[2])
                                    + '_' + str(i) + '_' + field)
                     
         # pulling records which match a query
@@ -421,7 +421,7 @@ def convert_to_redis(c, stores):
                 
             for pk in matching_pk_list:
                 for field in fields:
-                    results.append('GET ' + (schema + '-' + c_array[2]) \
+                    results.append('GET ' + (schema + '-' + c_array[2])
                                + '_' + pk + '_' + field)
                 
     elif c_array[0].upper() == 'UPDATE':
@@ -438,8 +438,8 @@ def convert_to_redis(c, stores):
             
         for pk in matching_pk_list:
             for i in range(0, len(fields)):
-                results.append('SET ' + (schema + '-' + c_array[2]) + '_' \
-                           + pk + '_' + fields[i] + ' ' \
+                results.append('SET ' + (schema + '-' + c_array[2]) + '_'
+                           + pk + '_' + fields[i] + ' '
                            + format_str_or_int(values[i])) 
 
     elif c_array[0].upper() == 'CREATE':
@@ -448,17 +448,17 @@ def convert_to_redis(c, stores):
         if len(fields) != len(values): 
             return ERROR__FIELDS_AND_VALUES_BAD_QUANTITY
 
-        this_new_pk = convert_to_redis__get_next_pk(read_only_redis, \
+        this_new_pk = convert_to_redis__get_next_pk(read_only_redis,
                                              schema, c_array[2])
         fields.append('id')
         values.append(this_new_pk)
 
-        results.append(\
+        results.append(
                 convert_to_redis__set_next_pk(schema, c_array[2], this_new_pk))
         
         for i in range(0, len(fields)):
-            results.append('SET ' + (schema + '-' + c_array[2]) + '_' \
-                           + str(this_new_pk) + '_' + fields[i] + ' ' \
+            results.append('SET ' + (schema + '-' + c_array[2]) + '_'
+                           + str(this_new_pk) + '_' + fields[i] + ' '
                            + format_str_or_int(values[i]))
 
     elif c_array[0].upper() == 'DELETE':
