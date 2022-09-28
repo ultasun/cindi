@@ -153,7 +153,7 @@ def len_2d_list(two_dimensional_list):
 
 def print_2d_list(two_dimensional_list):
     """
-    Iterate through a 2D list, print the str() result of elements. Returns void. 
+    Iterate through a 2D list, print the str() of elements. Returns void.
     """
     for x in two_dimensional_list:
         for y in x:
