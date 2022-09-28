@@ -267,7 +267,7 @@ def convert_to_redis__find_last_pk(read_only_redis, schema, table_name):
     result = 0
     primary_keys = []
     entire_table = read_only_redis.keys(schema + '-' + table_name + '_*_*')
-    print(DEBUG_PRINT_PREFIX__REDIS \
+    print(DEBUG_PRINT_PREFIX__REDIS
           + "KEYS " + (schema + '-' + table_name + '_*_*'))
     for row_col in entire_table:
         this_key = int(row_col.decode('ASCII').split('_')[1])
