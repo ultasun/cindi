@@ -383,15 +383,15 @@ def convert_to_redis(c, stores):
                                               c_array[2]) +
                                              '_*_' + c_array[3])
 
-        print(DEBUG_PRINT_PREFIX__REDIS + \
+        print(DEBUG_PRINT_PREFIX__REDIS +
               "matching key length: " + str(len(matching_keys)))
         # this returns every row in the table,
         # only the ID and search_by_field columns...use the redis SCAN command
         for m in matching_keys: 
             print(DEBUG_PRINT_PREFIX__REDIS + "GET " + m.decode('ASCII'))
             this_value = read_only_redis.get(m)
-            print(DEBUG_PRINT_PREFIX__REDIS + \
-                  this_value.decode('ASCII') + \
+            print(DEBUG_PRINT_PREFIX__REDIS +
+                  this_value.decode('ASCII') +
                   " compared to " + search_by_value)
             if this_value.decode('ASCII') == search_by_value:
                 matching_pk_list.append(m.decode('ASCII').split('_')[1])
