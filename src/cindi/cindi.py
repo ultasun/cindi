@@ -221,7 +221,7 @@ def get_indi_values(c):
     """
     first_l_parenthesis_index = c.find('(') + 1
     first_r_parenthesis_index = c.find(')') + 1
-    values = c[(c.find('(', first_l_parenthesis_index) \
+    values = c[(c.find('(', first_l_parenthesis_index)
                 + 1):c.find(')', first_r_parenthesis_index)]
     values = values.split("\", \"")
     values[0] = values[0].strip('\"')
