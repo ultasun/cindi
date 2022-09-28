@@ -127,17 +127,16 @@ def is_list_all_nones(list):
     else:
         return True
 
-def is_all_list_elements_equal(testList):
+def is_all_list_elements_equal(test_list):
     """
     Check if a 1D list contains all equal elements. Returns a boolean.
     """
-    list_count = len(testList)
+    list_count = len(test_list)
     boolean_result = True
     
     if list_count > 1:
         for i in range (1, list_count):
-            boolean_result = boolean_result and \
-                testList[0] == testList[i]
+            boolean_result = boolean_result and test_list[0] == test_list[i]
 
     return boolean_result
 
