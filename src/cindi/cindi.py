@@ -299,7 +299,7 @@ def convert_to_redis__get_next_pk(read_only_redis, schema, table_name):
     argument is the INDI table name.
     """
     result = read_only_redis.get(schema + '-' + table_name + '-NEXTPK')
-    print(DEBUG_PRINT_PREFIX__REDIS \
+    print(DEBUG_PRINT_PREFIX__REDIS
           + "GET " + (schema + '-' + table_name + '-NEXTPK'))
     if result is None:
         result = 1
