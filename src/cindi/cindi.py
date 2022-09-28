@@ -379,8 +379,8 @@ def convert_to_redis(c, stores):
 
         # need to update the next line so c_array[3] is search_by_value
         # because otherwise the quotes will be passed in
-        matching_keys = read_only_redis.keys((schema + '-' + \
-                                              c_array[2]) + \
+        matching_keys = read_only_redis.keys((schema + '-' +
+                                              c_array[2]) +
                                              '_*_' + c_array[3])
 
         print(DEBUG_PRINT_PREFIX__REDIS + \
