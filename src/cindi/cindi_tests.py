@@ -47,10 +47,10 @@ EXAMPLE12 = """UPDATE IN nonsense id 1 FIELDS (nonsense_a) VALUES (\"yeah, right
 EXAMPLE13 = """DELETE IN nonsense id 1"""
 EXAMPLE14 = """DELETE IN nonsense nonsense_b skare"""
 EXAMPLE15 = """UPDATE IN nonsense nonsense_a \"yeah, right\" FIELDS (nonsense_a, nonsense_b, nonsense_c) VALUES (\"hekkin big\", \"skare\", \"today and now\")"""
-EXAMPLE_DML_LIST__UPDATE_AND_DELETE = [ EXAMPLE10, EXAMPLE11, EXAMPLE12, EXAMPLE13, EXAMPLE14, \
-                     EXAMPLE15 ]
+EXAMPLE_DML_LIST__UPDATE_AND_DELETE = [
+    EXAMPLE10, EXAMPLE11, EXAMPLE12, EXAMPLE13, EXAMPLE14, EXAMPLE15 ]
 
-EXAMPLE_LIST = [ EXAMPLE_DML_LIST__CREATE, \
+EXAMPLE_LIST = [ EXAMPLE_DML_LIST__CREATE,
                  EXAMPLE_DQL_LIST, EXAMPLE_DML_LIST__UPDATE_AND_DELETE ]
 
 # end examples delcarations section
