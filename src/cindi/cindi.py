@@ -547,7 +547,7 @@ def execute_redis(indi_statement, stores):
         else:
             this_built_set.append(None)
 
-        print(DEBUG_PRINT_PREFIX__REDIS + \
+        print(DEBUG_PRINT_PREFIX__REDIS +
               "redis this built set length: " + str(len(this_built_set)))
         for x in this_built_set:
             print(DEBUG_PRINT_PREFIX__REDIS +
@@ -598,8 +598,8 @@ def convert_to_sql(c):
         fields = get_indi_fields(c)
 
         if c_array[3].upper() == 'ALL' and c_array[4].upper() == 'RECORDS':
-            results.append('SELECT ' + convert_to_sql__fields_merger(fields) \
-                           + ' FROM ' + (c_array[2]) \
+            results.append('SELECT ' + convert_to_sql__fields_merger(fields)
+                           + ' FROM ' + (c_array[2])
                            + ' ORDER BY id ASC;')
             
         else:
