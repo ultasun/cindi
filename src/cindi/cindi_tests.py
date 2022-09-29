@@ -91,7 +91,7 @@ def quick_unit_tests():
 
     if not quick_cindi(EXAMPLE5) == [[]]:
         boolean_result = False
-        raise AssertionError(\
+        raise AssertionError(
             "Re-initialize backing stores from new before running examples.")
 
     i = 0
