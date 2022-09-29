@@ -369,13 +369,6 @@ def convert_to_redis(c, stores):
        and (c_array[3].lower() != 'id' and c_array[3].upper() != 'ALL'): 
         search_by_field = c_array[3]
         search_by_value = get_indi_query(c)
-        
-#        if c.find("\"") > -1 and c.find("\"") < c.find('FIELDS'):
-#            search_by_value = c.split("\"")[1]
-#        elif c.find("\'") > -1 and c.find("\'") < c.find('FIELDS'):
-#            search_by_value = c.split("\'")[1]
-#        else:
-#            search_by_value = c_array[4]
 
         # need to update the next line so c_array[3] is search_by_value
         # because otherwise the quotes will be passed in
