@@ -463,12 +463,10 @@ def convert_to_redis(c, stores):
             matching_pk_list.append(c_array[4])
             
         for pk in matching_pk_list: 
-            these_matching_keys = \
-                    read_only_redis \
-                    .keys((schema + '-' \
-                           + c_array[2]) \
-                          + '_' + pk \
-                          + '_*')
+            these_matching_keys = read_only_redis.keys((schema + '-'
+                                                    + c_array[2])
+                                                    + '_' + pk
+                                                    + '_*')
             # need to 'flatten the list'
             for k in these_matching_keys:
                 matching_keys.append(k)
