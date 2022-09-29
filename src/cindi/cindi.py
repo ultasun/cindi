@@ -528,7 +528,7 @@ def execute_redis(indi_statement, stores):
             else:
                 this_result = "Redis SET failed. Check the CINDI README."
                 print(DEBUG_PRINT_PREFIX__REDIS + this_result)
-                print(DEBUG_PRINT_PREFIX__REDIS + \
+                print(DEBUG_PRINT_PREFIX__REDIS +
                       'This was the statement to evaluate: ')
                 print(DEBUG_PRINT_PREFIX__REDIS + statement)
                 exit(29) # 'cannot write to specified device' 
