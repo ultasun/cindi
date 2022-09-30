@@ -319,13 +319,13 @@ def convert_to_redis__set_next_pk(schema, table_name, last_used_pk):
     return 'SET ' \
         + schema + '-' + table_name + '-NEXTPK ' + str(int(last_used_pk) + 1)
 
-# remember, we only need `read_only_redis` in order to emulate
-# sub-queries, in particular, for DELETE, because you can not
-# wildcard delete keys in Redis.
+# `stores` (from which `read_only_redis` is derived) is necessary in order to
+# emulate sub-queries -- in particular, an INDI DELETE, because redis does not
+# support the deletion of keys via wild-cards.
 #
-# please do NOT break the paradigm and issue any mutating commands
-# => !! only do KEYS and GET commands please with read_only_redis !!!!!!! <=
-# => !! the SET commands are supposed to happen later in execute_redis !! <=
+# => !!! PLEASE, only KEYS and GET commands with read_only_redis !!!!!!!!! <=
+# => !!! any SET commands are supposed to happen later in execute_redis !! <=
+# => !!! append any SET commands to the list returned by this function !!! <=
 def convert_to_redis(c, stores):
     """
     Convert an INDI statement to redis statements. Returns multiple values.
@@ -342,11 +342,8 @@ def convert_to_redis(c, stores):
     initialize_stores().
 
     The stores are passed as an argument in order to emulate sub-queries. The
-    stores are not supposed to be written to within this function.
-    
-    !! If you are modifying this function, please do not execute any 'write'
-    style commands on read_only_redis. Instead, place the write into the result
-    of this function. !! 
+    stores are not supposed to be written/mutated/modified from within this
+    function.
     """
     read_only_redis = stores['redis'] # no way to enforce 'read only'
     schema = stores['info']['redis']['db']
