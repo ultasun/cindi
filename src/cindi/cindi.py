@@ -65,8 +65,8 @@ import sqlite3
 # ------------------------------------------------------------------------------
 # begin constants delcarations section
 
-DEBUG_PRINT_PREFIX__REDIS = "REDIS> "
-DEBUG_PRINT_PREFIX__MYSQL = "MySQL> "
+DEBUG_PRINT_PREFIX__REDIS = "redis> "
+DEBUG_PRINT_PREFIX__MYSQL = "mysql> "
 DEBUG_PRINT_PREFIX__MONGO = "mongodb> "
 DEBUG_PRINT_PREFIX__POSTGRES = "postgres> "
 DEBUG_PRINT_PREFIX__SQLITE3 = "sqlite3> "
