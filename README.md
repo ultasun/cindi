@@ -254,9 +254,6 @@ Here are the exit numbers and error messages which might be produced by *CINDI*:
 
 See the next section regarding **Support**!
 
-## Support
-The author is available for questions, comments and criticism in #cindi on [Libera.Chat](https://libera.chat).
-
 ## Credits
 Please read the [LICENSE](https://github.com/ultasun/cindi/blob/master/LICENSE).  This software was written by a single individual.  This is alpha-quality software, you are likely to find bugs!  Please submit feedback!
 **Thank you for evaluating *CINDI*!**
