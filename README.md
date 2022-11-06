@@ -252,8 +252,6 @@ Here are the exit numbers and error messages which might be produced by *CINDI*:
 - A simple solution to this in a future release will be to have a `/cache-clear` endpoint in *Flask*, **or**
 - A file on the file system is monitored, if it is changed, then other instances know to clear the cache.
 
-See the next section regarding **Support**!
-
 ## Credits
 Please read the [LICENSE](https://github.com/ultasun/cindi/blob/master/LICENSE).  This software was written by a single individual.  This is alpha-quality software, you are likely to find bugs!  Please submit feedback!
 **Thank you for evaluating *CINDI*!**
